@@ -36,7 +36,6 @@ class AppComponent extends React.PureComponent {
     return (
       <div className="index">
         <RatesDisplay
-          config={this.config}
           base={this.state.base}
           compare={this.state.compare}
           date={this.state.date}
