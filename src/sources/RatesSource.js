@@ -1,4 +1,5 @@
 import config from 'config';
+import 'whatwg-fetch';
 
 class RatesSource {
   constructor() {
@@ -23,7 +24,6 @@ class RatesSource {
 
   normalizeRate(rate, compare, dateString) {
     return {
-      name: dateString,
       base: rate.base,
       compare: compare,
       //date in response may not be equal to requested date

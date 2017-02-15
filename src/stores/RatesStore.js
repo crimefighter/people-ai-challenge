@@ -1,4 +1,5 @@
 import moment from 'moment';
+import Promise from 'promise-polyfill';
 import RateStore from './RateStore';
 
 class RatesStore {

@@ -7,7 +7,7 @@ import { Router, Route, hashHistory } from 'react-router';
 // Render the main component into the dom
 ReactDOM.render((
   <Router history={hashHistory}>
-    <Route path="/(:base)(/:compare)(/:date)(/:days)" component={App}>
+    <Route path="/(:base)(/:compare)" component={App}>
     </Route>
   </Router>
 ), document.getElementById('app'));
