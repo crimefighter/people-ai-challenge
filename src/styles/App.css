@@ -40,8 +40,13 @@ h1 {
   color: #aaa;
 }
 
+.text-error,
+.text-error>a {
+  color: #cc0000;
+}
+
 .chart-container {
-  padding: 20px 50px;
+  padding: 0 50px;
 }
 
 .navigation-bar select,
@@ -51,7 +56,7 @@ h1 {
   background: #777;
   color: #eee;
   height: 30px;
-  border: none;
+  border: 0 none;
 }
 
 .navigation-bar label {

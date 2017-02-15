@@ -1,9 +1,12 @@
 import moment from 'moment';
+import {includes} from 'lodash';
 import Promise from 'promise-polyfill';
+
 import RateStore from './RateStore';
 
 class RatesStore {
-  constructor() {
+  constructor(props) {
+    this.allowedCurrencies = props.currencies;
     this.rateStore = new RateStore();
   }
 
@@ -14,7 +17,7 @@ class RatesStore {
         days = Number(props.days);
 
     if (!this.arePropsValid(base, compare, baseDate, days)) {
-      throw ['Invalid properties', base, compare, baseDate, days].join(', ');
+      return Promise.reject('Invalid properties');
     }
 
     let ratePromises = [];
@@ -26,7 +29,15 @@ class RatesStore {
   }
 
   arePropsValid(base, compare, baseDate, days) {
-    return base && compare && moment(baseDate).isValid() && !isNaN(days);
+    return (
+      base &&
+      compare &&
+      !isNaN(days) &&
+      days > 0 &&
+      moment(baseDate).isValid() &&
+      includes(this.allowedCurrencies, base) &&
+      includes(this.allowedCurrencies, compare)
+    );
   }
 
   buildDateString(baseDate, daysIntoPast) {

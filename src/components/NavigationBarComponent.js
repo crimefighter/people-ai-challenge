@@ -63,9 +63,9 @@ class NavigationBarComponent extends React.Component {
             <option key={currency} value={currency}>{currency}</option>
           ))}
         </select>
-        <label for="date">Date:</label>
+        <label>Date:</label>
         <DatePicker name="date" selected={moment(this.props.date)} onChange={this.handleDateChange.bind(this)} />
-        <label for="days">Look back:</label>
+        <label>Look back:</label>
         <select name="days" value={this.props.days} onChange={this.handleChange.bind(this)}>
           {[7, 14, 21, 28].map(days => (
             <option key={days} value={days}>{days} days</option>

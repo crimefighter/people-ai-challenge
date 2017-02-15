@@ -34,6 +34,7 @@ class AppComponent extends React.PureComponent {
           days={params.days}
         />
         <RatesDisplay
+          currencies={params.currencies}
           base={params.base}
           compare={params.compare}
           date={params.date}

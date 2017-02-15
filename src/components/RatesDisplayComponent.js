@@ -1,6 +1,7 @@
 import React from 'react';
 import {find, mean, round} from 'lodash';
 import moment from 'moment';
+import {Link} from 'react-router';
 
 import RatesStore from '../stores/RatesStore';
 import {BarChart, Bar, ReferenceLine, ResponsiveContainer, XAxis, YAxis} from 'recharts';
@@ -9,9 +10,12 @@ import RateBarLabel from './RateBarLabelComponent';
 class RatesDisplayComponent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.ratesStore = new RatesStore();
+    this.ratesStore = new RatesStore({
+      currencies: props.currencies
+    });
     this.state = {
-      loading: true
+      loading: true,
+      error: false
     };
   }
 
@@ -32,18 +36,27 @@ class RatesDisplayComponent extends React.PureComponent {
       });
     }
 
-    this.ratesStore.getRates(this.props).then((newRates) => {
-      let rates = this.normalizeRatesForChart(newRates),
-          meanValue = getMeanValue(rates),
-          standardDeviation = getStandardDeviation(rates, meanValue);
+    this.ratesStore.getRates(this.props).then(
+      (newRates) => {
+        let rates = this.normalizeRatesForChart(newRates),
+            meanValue = getMeanValue(rates),
+            standardDeviation = getStandardDeviation(rates, meanValue);
 
-      this.setState({
-        loading: false,
-        rates: rates,
-        mean: meanValue,
-        standardDeviation: standardDeviation
-      });
-    });
+        this.setState({
+          loading: false,
+          error: false,
+          rates: rates,
+          mean: meanValue,
+          standardDeviation: standardDeviation
+        });
+      },
+      (error) => {
+        this.setState({
+          loading: false,
+          error: error
+        });
+      }
+    );
 
     function getMeanValue(rates) {
       return rates && mean(rates.map((rate) => {
@@ -82,7 +95,7 @@ class RatesDisplayComponent extends React.PureComponent {
   render() {
     return (
       <div className="text-center chart-container">
-        <div className={this.state.loading && 'transparent'}>
+        <div className={this.state.loading || this.state.error ? 'transparent' : ''}>
           <ResponsiveContainer width="100%" height={500} >
             <BarChart data={this.state.rates}>
               <XAxis dataKey="name" />
@@ -90,6 +103,7 @@ class RatesDisplayComponent extends React.PureComponent {
                 hide={true}
                 dataKey="chartValue"
                 domain={['dataMin - 1', 'dataMax + 1']}
+                padding={{top: 40}}
               />
               <ReferenceLine
                 y={this.state.mean * this.props.scaleFactor}
@@ -105,13 +119,18 @@ class RatesDisplayComponent extends React.PureComponent {
           </ResponsiveContainer>
         </div>
 
-        <div className={this.state.loading ? 'hidden' : 'text-light-gray'}>
+        <div className={this.state.loading || this.state.error ? 'hidden' : 'text-light-gray'}>
           Median: {round(this.state.mean, 3)}
           &nbsp;&bull;
           Standard Deviation: {round(this.state.standardDeviation, 4)}
         </div>
 
         {this.state.loading && <div>Loading...</div>}
+        {!this.state.loading && this.state.error && (
+          <div className="text-error">
+            Error retrieving data. <Link to="/">Reset</Link>
+          </div>
+        )}
       </div>
     );
   }
