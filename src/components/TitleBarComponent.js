@@ -5,11 +5,11 @@ class TitleBarComponent extends React.PureComponent {
   getFromDateString() {
     return moment(this.props.date).startOf('day')
       .subtract(this.props.days, 'days')
-      .format('MMM D YYYY');
+      .format(this.props.dateFormat);
   }
 
   getToDateString() {
-    return moment(this.props.date).format('MMM D YYYY');
+    return moment(this.props.date).format(this.props.dateFormat);
   }
 
   render() {
@@ -20,5 +20,9 @@ class TitleBarComponent extends React.PureComponent {
     );
   }
 }
+
+TitleBarComponent.defaultProps = {
+  dateFormat: 'MMM D, YYYY'
+};
 
 export default TitleBarComponent;

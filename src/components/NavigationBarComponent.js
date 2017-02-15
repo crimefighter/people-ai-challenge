@@ -55,7 +55,9 @@ class NavigationBarComponent extends React.Component {
             <option key={currency} value={currency}>{currency}</option>
           ))}
         </select>
-        <button onClick={this.switchCurrencies.bind(this)}>/</button>
+        <button onClick={this.switchCurrencies.bind(this)}>
+          &harr;
+        </button>
         <select name="compare" value={this.props.compare} onChange={this.handleChange.bind(this)}>
           {this.props.currencies.map(currency => (
             <option key={currency} value={currency}>{currency}</option>

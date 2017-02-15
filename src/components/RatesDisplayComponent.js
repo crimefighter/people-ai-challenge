@@ -105,9 +105,9 @@ class RatesDisplayComponent extends React.PureComponent {
           </ResponsiveContainer>
         </div>
 
-        <div className={this.state.loading && 'hidden'}>
+        <div className={this.state.loading ? 'hidden' : 'text-light-gray'}>
           Median: {round(this.state.mean, 3)}
-          &bull;
+          &nbsp;&bull;
           Standard Deviation: {round(this.state.standardDeviation, 4)}
         </div>
 
