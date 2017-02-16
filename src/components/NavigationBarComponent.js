@@ -52,27 +52,35 @@ class NavigationBarComponent extends React.Component {
   render() {
     return (
       <div className="navigation-bar text-center">
-        <select name="base" value={this.props.base} onChange={this.handleChange.bind(this)}>
-          {without(this.props.currencies, this.props.compare).map(currency => (
-            <option key={currency} value={currency}>{currency}</option>
-          ))}
-        </select>
-        <button onClick={this.switchCurrencies.bind(this)}>
-          &harr;
-        </button>
-        <select name="compare" value={this.props.compare} onChange={this.handleChange.bind(this)}>
-          {without(this.props.currencies, this.props.base).map(currency => (
-            <option key={currency} value={currency}>{currency}</option>
-          ))}
-        </select>
-        <label>Date:</label>
-        <DatePicker name="date" selected={moment(this.props.date)} onChange={this.handleDateChange.bind(this)} />
-        <label>Look back:</label>
-        <select name="days" value={this.props.days} onChange={this.handleChange.bind(this)}>
-          {this.props.daysOptions.map(days => (
-            <option key={days} value={days}>{days} days</option>
-          ))}
-        </select>
+        <span className="no-wrap">
+          <select name="base" value={this.props.base} onChange={this.handleChange.bind(this)}>
+            {without(this.props.currencies, this.props.compare).map(currency => (
+              <option key={currency} value={currency}>{currency}</option>
+            ))}
+          </select>
+          <button onClick={this.switchCurrencies.bind(this)}>
+            &harr;
+          </button>
+          <select name="compare" value={this.props.compare} onChange={this.handleChange.bind(this)}>
+            {without(this.props.currencies, this.props.base).map(currency => (
+              <option key={currency} value={currency}>{currency}</option>
+            ))}
+          </select>
+        </span>
+        
+        <span className="no-wrap">
+          <label>Date:</label>
+          <DatePicker name="date" selected={moment(this.props.date)} onChange={this.handleDateChange.bind(this)} />
+        </span>
+
+        <span className="no-wrap">
+          <label>Look back:</label>
+          <select name="days" value={this.props.days} onChange={this.handleChange.bind(this)}>
+            {this.props.daysOptions.map(days => (
+              <option key={days} value={days}>{days} days</option>
+            ))}
+          </select>
+        </span>
       </div>
     );
   }

@@ -10,7 +10,7 @@ import sinon from 'sinon';
 import moment from 'moment';
 import {BarChart} from 'recharts';
 import Promise from 'promise-polyfill';
-import {isEqual, round} from 'lodash';
+import {difference, round} from 'lodash';
 
 import config from 'config';
 import RatesDisplay from 'components/RatesDisplayComponent';
@@ -65,28 +65,28 @@ describe('RatesDisplayComponent', function () {
       });
 
       it('renders', function () {
-        expect(TestUtils.isElement(chart));
+        expect(TestUtils.isCompositeComponent(chart)).to.equal(true);
       });
 
       it('receives normalized data', function () {
         return Promise.resolve().then(() => {
           expect(chart.props.data.length).to.equal(2);
-          expect(isEqual(chart.props.data[0], {
+          expect(difference(chart.props.data[0], {
             base: 'USD',
             compare: 'EUR',
             date: '2017-02-14',
-            value: 0.5,
+            value: rates[0].value,
             name: 'Feb 14',
             chartValue: round(rates[0].value, 3) * this.RatesDisplay.props.scaleFactor
-          }));
-          expect(isEqual(chart.props.data[1], {
+          }).length).to.equal(0);
+          expect(difference(chart.props.data[1], {
             base: 'USD',
             compare: 'EUR',
             date: '2017-02-15',
-            value: 1,
+            value: rates[1].value,
             name: 'Feb 15',
             chartValue: round(rates[1].value, 3) * this.RatesDisplay.props.scaleFactor
-          }));
+          }).length).to.equal(0);
         });
       });
     });
@@ -134,7 +134,7 @@ describe('RatesDisplayComponent', function () {
           days={config.defaults.days}
         />, node
       );
-      expect(this.RatesDisplay.populateRates.called);
+      expect(this.RatesDisplay.populateRates.called).to.equal(true);;
     });
   });
 
