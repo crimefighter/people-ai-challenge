@@ -77,7 +77,7 @@ class RatesDisplayComponent extends React.PureComponent {
     return sortBy(rates, 'date').map((rate) => {
       return Object.assign({}, rate, {
         name: moment(rate.date).format('MMM D'),
-        chartValue: rate.value * this.props.scaleFactor
+        chartValue: round(rate.value, 3) * this.props.scaleFactor
       });
     });
   }
@@ -86,7 +86,7 @@ class RatesDisplayComponent extends React.PureComponent {
     return (
       <div className="text-center chart-container">
         <div className={this.state.loading || this.state.error ? 'transparent' : ''}>
-          <ResponsiveContainer width="100%" height={500} minWidth={this.props.days * 50}>
+          <ResponsiveContainer width="100%" height={500}>
             <BarChart data={this.state.rates}>
               <XAxis dataKey="name" />
               <YAxis
@@ -96,7 +96,7 @@ class RatesDisplayComponent extends React.PureComponent {
                 padding={{top: 40}}
               />
               <ReferenceLine
-                y={this.state.mean * this.props.scaleFactor}
+                y={round(this.state.mean, 3) * this.props.scaleFactor}
                 stroke="#ccc"
                 strokeDasharray="3 3"
               />

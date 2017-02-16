@@ -22,13 +22,13 @@ const rates = [
     base: 'USD',
     compare: 'EUR',
     date: config.defaults.date,
-    value: 1
+    value: 1.12345
   },
   {
     base: 'USD',
     compare: 'EUR',
     date: moment(config.defaults.date).subtract(1, 'day').format(config.dateFormats.param),
-    value: 0.5
+    value: 0.512345
   }
 ];
 
@@ -77,7 +77,7 @@ describe('RatesDisplayComponent', function () {
             date: '2017-02-14',
             value: 0.5,
             name: 'Feb 14',
-            chartValue: 0.5 * this.RatesDisplay.props.scaleFactor
+            chartValue: round(rates[0].value, 3) * this.RatesDisplay.props.scaleFactor
           }));
           expect(isEqual(chart.props.data[1], {
             base: 'USD',
@@ -85,7 +85,7 @@ describe('RatesDisplayComponent', function () {
             date: '2017-02-15',
             value: 1,
             name: 'Feb 15',
-            chartValue: 1 * this.RatesDisplay.props.scaleFactor
+            chartValue: round(rates[1].value, 3) * this.RatesDisplay.props.scaleFactor
           }));
         });
       });

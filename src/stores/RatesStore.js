@@ -15,7 +15,7 @@ class RatesStore {
     let base = props.base,
         compare = props.compare,
         baseDate = props.date,
-        days = Number(props.days);
+        days = Math.min(Number(props.days), config.maxDays);
 
     if (!this.arePropsValid(base, compare, baseDate, days)) {
       return Promise.reject('Invalid properties');

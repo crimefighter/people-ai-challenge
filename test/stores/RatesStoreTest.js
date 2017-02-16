@@ -5,6 +5,7 @@
 
 import sinon from 'sinon';
 
+import config from 'config';
 import RatesStore from 'stores/RatesStore';
 
 describe('RatesStore', function () {
@@ -38,6 +39,23 @@ describe('RatesStore', function () {
 
       it('returns a promise', function () {
         expect(result.then).to.be.a('function');
+      });
+    });
+
+    describe('when passed too many days', function () {
+      let result;
+
+      beforeEach(function () {
+        result = this.ratesStore.getRates({
+          base: 'USD',
+          compare: 'CAD',
+          date: '2000-01-01',
+          days: 100
+        });
+      });
+
+      it('uses config.maxDays instead', function () {
+        expect(this.ratesStore.rateStore.fetchRate.callCount).to.equal(config.maxDays);
       });
     });
 

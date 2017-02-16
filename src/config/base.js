@@ -51,6 +51,7 @@ export default {
     21,
     28
   ],
+  maxDays: 28,
   dateFormats: {
     param: 'YYYY-MM-DD',
     title: 'MMM D, YYYY'
