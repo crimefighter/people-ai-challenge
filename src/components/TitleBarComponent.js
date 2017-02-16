@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 
+import config from 'config';
+
 class TitleBarComponent extends React.PureComponent {
   getFromDateString() {
     return moment(this.props.date).startOf('day')
@@ -22,7 +24,7 @@ class TitleBarComponent extends React.PureComponent {
 }
 
 TitleBarComponent.defaultProps = {
-  dateFormat: 'MMM D, YYYY'
+  dateFormat: config.dateFormats.title
 };
 
 export default TitleBarComponent;

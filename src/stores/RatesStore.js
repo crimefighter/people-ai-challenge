@@ -1,12 +1,13 @@
 import moment from 'moment';
 import {includes} from 'lodash';
 import Promise from 'promise-polyfill';
+import config from 'config';
 
 import RateStore from './RateStore';
 
 class RatesStore {
-  constructor(props) {
-    this.allowedCurrencies = props.currencies;
+  constructor() {
+    this.allowedCurrencies = config.currencies;
     this.rateStore = new RateStore();
   }
 
@@ -41,7 +42,7 @@ class RatesStore {
   }
 
   buildDateString(baseDate, daysIntoPast) {
-    return moment(baseDate).startOf('day').subtract(daysIntoPast, 'days').format('YYYY-MM-DD');
+    return moment(baseDate).startOf('day').subtract(daysIntoPast, 'days').format(config.dateFormats.param);
   }
 }
 

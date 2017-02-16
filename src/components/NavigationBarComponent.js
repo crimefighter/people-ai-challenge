@@ -4,6 +4,8 @@ import React from 'react';
 import {hashHistory} from 'react-router';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import {without} from 'lodash';
+import config from 'config';
 
 class NavigationBarComponent extends React.Component {
   handleChange(event) {
@@ -18,7 +20,7 @@ class NavigationBarComponent extends React.Component {
       newDate = todayMoment;
     }
     this.navigate({
-      date: newDate.format('YYYY-MM-DD')
+      date: newDate.format(config.dateFormats.param)
     });
   }
 
@@ -51,7 +53,7 @@ class NavigationBarComponent extends React.Component {
     return (
       <div className="navigation-bar text-center">
         <select name="base" value={this.props.base} onChange={this.handleChange.bind(this)}>
-          {this.props.currencies.map(currency => (
+          {without(this.props.currencies, this.props.compare).map(currency => (
             <option key={currency} value={currency}>{currency}</option>
           ))}
         </select>
@@ -59,7 +61,7 @@ class NavigationBarComponent extends React.Component {
           &harr;
         </button>
         <select name="compare" value={this.props.compare} onChange={this.handleChange.bind(this)}>
-          {this.props.currencies.map(currency => (
+          {without(this.props.currencies, this.props.base).map(currency => (
             <option key={currency} value={currency}>{currency}</option>
           ))}
         </select>
@@ -67,7 +69,7 @@ class NavigationBarComponent extends React.Component {
         <DatePicker name="date" selected={moment(this.props.date)} onChange={this.handleDateChange.bind(this)} />
         <label>Look back:</label>
         <select name="days" value={this.props.days} onChange={this.handleChange.bind(this)}>
-          {[7, 14, 21, 28].map(days => (
+          {this.props.daysOptions.map(days => (
             <option key={days} value={days}>{days} days</option>
           ))}
         </select>
@@ -75,5 +77,10 @@ class NavigationBarComponent extends React.Component {
     );
   }
 }
+
+NavigationBarComponent.defaultProps = {
+  currencies: config.currencies,
+  daysOptions: config.daysOptions
+};
 
 export default NavigationBarComponent;

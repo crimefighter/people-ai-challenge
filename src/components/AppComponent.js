@@ -2,7 +2,7 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-import {defaults} from 'lodash';
+import {defaults, get} from 'lodash';
 
 import config from 'config';
 import RatesDisplay from './RatesDisplayComponent'
@@ -12,7 +12,7 @@ import NavigationBar from './NavigationBarComponent';
 class AppComponent extends React.PureComponent {
   render() {
     let params = Object.assign({},
-      this.props.location.query,
+      get(this.props, 'location.query', {}),
       this.props.params
     );
 
@@ -27,14 +27,12 @@ class AppComponent extends React.PureComponent {
           days={params.days}
         />
         <NavigationBar
-          currencies={params.currencies}
           base={params.base}
           compare={params.compare}
           date={params.date}
           days={params.days}
         />
         <RatesDisplay
-          currencies={params.currencies}
           base={params.base}
           compare={params.compare}
           date={params.date}

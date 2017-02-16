@@ -8,7 +8,9 @@ function RateBarLabelComponent(props) {
       y={props.y}
       fill={props.payload.value < props.mean ? '#ffcccb' : '#c9fdc9'}
       textAnchor={props.textAnchor}
-    >{round(props.payload.value, 3)}</text>
+    >
+      {round(props.payload.value, 3)}
+    </text>
   );
 }
 

@@ -1,18 +1,21 @@
 import React from 'react';
-import {find, mean, round} from 'lodash';
+import {find, round, sortBy} from 'lodash';
 import moment from 'moment';
 import {Link} from 'react-router';
 
 import RatesStore from '../stores/RatesStore';
+import RateCalculationsStore from '../stores/RateCalculationsStore';
+
 import {BarChart, Bar, ReferenceLine, ResponsiveContainer, XAxis, YAxis} from 'recharts';
 import RateBarLabel from './RateBarLabelComponent';
 
 class RatesDisplayComponent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.ratesStore = new RatesStore({
-      currencies: props.currencies
-    });
+
+    this.ratesStore = new RatesStore();
+    this.rateCalculations = new RateCalculationsStore();
+
     this.state = {
       loading: true,
       error: false
@@ -39,8 +42,8 @@ class RatesDisplayComponent extends React.PureComponent {
     this.ratesStore.getRates(this.props).then(
       (newRates) => {
         let rates = this.normalizeRatesForChart(newRates),
-            meanValue = getMeanValue(rates),
-            standardDeviation = getStandardDeviation(rates, meanValue);
+            meanValue = this.rateCalculations.getMeanValue(rates),
+            standardDeviation = this.rateCalculations.getStandardDeviation(rates, meanValue);
 
         this.setState({
           loading: false,
@@ -57,19 +60,6 @@ class RatesDisplayComponent extends React.PureComponent {
         });
       }
     );
-
-    function getMeanValue(rates) {
-      return rates && mean(rates.map((rate) => {
-        return rate.value;
-      }));
-    }
-
-    function getStandardDeviation(rates, meanValue) {
-      let squaredDeviations = rates.map((rate) => {
-        return Math.pow(meanValue - rate.value, 2);
-      });
-      return Math.sqrt(mean(squaredDeviations));
-    }
   }
 
   havePropsChanged(oldProps) {
@@ -84,7 +74,7 @@ class RatesDisplayComponent extends React.PureComponent {
   }
 
   normalizeRatesForChart(rates) {
-    return rates.reverse().map((rate) => {
+    return sortBy(rates, 'date').map((rate) => {
       return Object.assign({}, rate, {
         name: moment(rate.date).format('MMM D'),
         chartValue: rate.value * this.props.scaleFactor
@@ -96,7 +86,7 @@ class RatesDisplayComponent extends React.PureComponent {
     return (
       <div className="text-center chart-container">
         <div className={this.state.loading || this.state.error ? 'transparent' : ''}>
-          <ResponsiveContainer width="100%" height={500} >
+          <ResponsiveContainer width="100%" height={500} minWidth={this.props.days * 50}>
             <BarChart data={this.state.rates}>
               <XAxis dataKey="name" />
               <YAxis
@@ -119,7 +109,7 @@ class RatesDisplayComponent extends React.PureComponent {
           </ResponsiveContainer>
         </div>
 
-        <div className={this.state.loading || this.state.error ? 'hidden' : 'text-light-gray'}>
+        <div className={this.state.loading || this.state.error ? 'legend hidden' : 'legend text-light-gray'}>
           Median: {round(this.state.mean, 3)}
           &nbsp;&bull;
           Standard Deviation: {round(this.state.standardDeviation, 4)}
